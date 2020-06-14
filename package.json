@@ -13,6 +13,7 @@
 	"dependencies": {
 		"@material-ui/core": "^4.10.1",
 		"file-loader": "^6.0.0",
+		"firebase": "^7.15.1",
 		"formik": "^2.1.4",
 		"immer": "^6.0.9",
 		"prop-types": "^15.7.2",
@@ -24,6 +25,7 @@
 		"react-router-config": "^5.1.1",
 		"react-router-dom": "^5.2.0",
 		"redux": "^4.0.5",
+		"redux-thunk": "^2.3.0",
 		"stylus": "^0.54.7",
 		"yup": "^0.29.1"
 	},

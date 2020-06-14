@@ -5,6 +5,8 @@ import {
 	withRouter,
 } from 'react-router-dom';
 import { RouteKeyEnums } from '../routes';
+import { useSelector } from 'react-redux';
+import { LoadingStatusEnum } from '../lib/enums';
 
 const {
 	LOGIN,
@@ -30,19 +32,22 @@ export function AuthRoute({
 	location,
 	render,
 }) {
-	const [isAuthed, setIsAuthed] = useState(true);
-	const [isAuthChecking, setIsAuttChecking] = useState(true);
+	// const [isAuthed, setIsAuthed] = useState(true);
+	// const [isAuthChecking, setIsAuttChecking] = useState(true);
 
-	useEffect(() => {
-		// TODO dispatch auth action
-		setTimeout(() => setIsAuttChecking(false), 100);
-	}, []);
+	const authData = useSelector(state => state.auth);
+	const { isAuthed, loadingStatus } = authData;
+
+	// useEffect(() => {
+	// 	// TODO dispatch auth action
+	// 	setTimeout(() => setIsAuttChecking(false), 100);
+	// }, []);
 
 	if (checkIsOmitPath(location.pathname)) {
 		return render({ isAuthed: false });
 	}
 
-	if (isAuthChecking) {
+	if (loadingStatus === LoadingStatusEnum.LOADING) {
 		return <div>Auth Checking...</div>;
 	}
 

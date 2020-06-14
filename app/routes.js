@@ -1,4 +1,5 @@
-import { lazy } from 'react';
+import React, { lazy } from 'react';
+import { Redirect } from 'react-router-dom';
 
 const Login = lazy(() => import('./pages/login'));
 const SignUp = lazy(() => import('./pages/sign-up'));
@@ -54,7 +55,7 @@ const routes = [
 	{
 		path: ROOT,
 		exact: true,
-		redirectPath: HOME,
+		component: () => <Redirect to={HOME}/>,
 	},
 ];
 

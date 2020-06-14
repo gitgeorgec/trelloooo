@@ -20,20 +20,39 @@ const propTypes = {
 	location: PropTypes.shape({
 		pathname: PropTypes.string.isRequired,
 	}).isRequired,
+	history: PropTypes.object,
 	isAuthed: PropTypes.bool.isRequired,
 };
 
 function LayoutRoute({
 	isAuthed,
+	history,
 }) {
 	const classes = useStyle();
 
+	function onNavigate(uri, options = { passProps: {} }) {
+		history.push({
+			pathname: uri,
+			passProps: options.passProps,
+		});
+	}
+
+	function onBack() {
+		history.goBack();
+	}
+
 	function _renderPublicLayout() {
-		return renderRoutes(routes);
+		return renderRoutes(routes, {
+			onNavigate,
+			onBack,
+		});
 	}
 
 	function _renderPrivateLayout() {
-		return renderRoutes(routes);
+		return renderRoutes(routes, {
+			onNavigate,
+			onBack,
+		});
 	}
 
 	return (
