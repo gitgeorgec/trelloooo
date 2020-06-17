@@ -7,32 +7,84 @@ const {
 	START_LOGIN,
 	LOGIN_SUCCESS,
 	LOGIN_FAILED,
+	START_LOGOUT,
+	LOGOUT_SUCCESS,
+	LOGOUT_FAILED,
+	START_SIGNUP,
+	SIGNUP_SUCCESS,
+	SIGNUP_FAILED,
 } = actionTypes;
 
 const initState = {
 	isAuthed: false,
-	loadingStatus: NONE,
+	loginLoadingStatus: NONE,
+	signUpLoadingStatus: NONE,
 	error: {},
 };
 
 const authReducer = produce((draftState = initState, action) => {
 	switch (action.type) {
 		case START_LOGIN: {
-			draftState.loadingStatus = LOADING;
+			draftState.loginLoadingStatus = LOADING;
 
 			return draftState;
 		}
 
 		case LOGIN_SUCCESS: {
-			draftState.loadingStatus = SUCCESS;
+			draftState.loginLoadingStatus = SUCCESS;
 			draftState.isAuthed = true;
 
 			return draftState;
 		}
 
 		case LOGIN_FAILED: {
-			draftState.loadingStatus = FAILED;
+			const { error } = action;
+
+			draftState.loginLoadingStatus = FAILED;
+			draftState.error = error;
+
+			return draftState;
+		}
+
+		case START_LOGOUT: {
+			draftState.loginLoadingStatus = LOADING;
+
+			return draftState;
+		}
+
+		case LOGOUT_SUCCESS: {
+			draftState.loginLoadingStatus = SUCCESS;
 			draftState.isAuthed = false;
+
+			return draftState;
+		}
+
+		case LOGOUT_FAILED: {
+			const { error } = action;
+
+			draftState.loginLoadingStatus = FAILED;
+			draftState.error = error;
+
+			return draftState;
+		}
+
+		case START_SIGNUP: {
+			draftState.signUpLoadingStatus = LOADING;
+
+			return draftState;
+		}
+
+		case SIGNUP_SUCCESS: {
+			draftState.signUpLoadingStatus = SUCCESS;
+
+			return draftState;
+		}
+
+		case SIGNUP_FAILED: {
+			const { error } = action;
+
+			draftState.signUpLoadingStatus = FAILED;
+			draftState.error = error;
 
 			return draftState;
 		}

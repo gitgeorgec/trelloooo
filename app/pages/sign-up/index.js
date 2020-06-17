@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { Link as RouterLink, Redirect } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
@@ -11,6 +12,11 @@ import { makeStyles } from '@material-ui/core';
 import { RouteKeyEnums } from '../../routes';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { useSelector, useDispatch } from 'react-redux';
+import { signUpAction } from '../../repositories/redux/actions/auth-actions';
+import { usePrevious } from '../../lib/react-utils';
+import { useEffect } from 'react';
+import { LoadingStatusEnum } from '../../lib/enums';
 
 const useStyles = makeStyles({
 	layout: {
@@ -28,92 +34,115 @@ const useStyles = makeStyles({
 		marginTop: 30,
 	},
 });
-const { LOGIN } = RouteKeyEnums;
+const { LOADING, SUCCESS } = LoadingStatusEnum;
+const { LOGIN, HOME } = RouteKeyEnums;
 const LoginSchema = Yup.object().shape({
 	email: Yup.string().email('Invalid email').required('Required'),
 	password: Yup.string().required('Required'),
 });
 
-function SignUpPage() {
-	const classes = useStyles();
+const propTypes = {
+	onNavigate: PropTypes.func,
+};
 
-	const _handleLogin = (values, { setSubmitting }) => {
-		console.log(values);
+function SignUpPage({
+	onNavigate,
+}) {
+	const classes = useStyles();
+	const authData = useSelector(state => state.auth);
+	const { isAuthed, signUpLoadingStatus } = authData;
+	const prevSignUpLoadingStatus = usePrevious(signUpLoadingStatus);
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		if (prevSignUpLoadingStatus === LOADING && signUpLoadingStatus === SUCCESS) {
+			onNavigate(HOME);
+		}
+	}, [signUpLoadingStatus]);
+
+	const _handleSignUp = (values, { setSubmitting }) => {
+		const { email, password } = values;
+
+		dispatch(signUpAction(email, password));
 		setSubmitting(false);
 	};
 
 	return (
-		<Container component="main" maxWidth="xs" className={classes.layout}>
-			<Card
-				variant="outlined"
-				className={classes.form}
-			>
-				<Typography component="h1" variant="h5" align="center">
-					Sign Up
-				</Typography>
-				<Formik
-					initialValues={{ email: '', password: '' }}
-					onSubmit={_handleLogin}
-					validationSchema={LoginSchema}
+		isAuthed ? <Redirect to={HOME}/> : (
+			<Container component="main" maxWidth="xs" className={classes.layout}>
+				<Card
+					variant="outlined"
+					className={classes.form}
 				>
-					{({
-						values: { email, password },
-						errors,
-						touched,
-						handleChange,
-						handleBlur,
-						handleSubmit,
-					}) => {
-						return (
-							<form onSubmit={handleSubmit}>
-								<TextField
-									variant="outlined"
-									margin="normal"
-									fullWidth
-									label="Email Address"
-									name="email"
-									value={email}
-									onChange={handleChange}
-									onBlur={handleBlur}
-									error={errors.email && touched.email}
-									helperText={(errors.email && touched.email) && errors.email}
-								/>
-								<TextField
-									variant="outlined"
-									margin="normal"
-									fullWidth
-									name="password"
-									label="Password"
-									type="password"
-									value={password}
-									onChange={handleChange}
-									onBlur={handleBlur}
-									error={errors.password && touched.password}
-									helperText={(errors.password && touched.password) && errors.password}
-								/>
-								<Button
-									type="submit"
-									fullWidth
-									variant="contained"
-									color="primary"
-									className={classes.button}
-								>
-									Sign Up
-								</Button>
-							</form>
-						);
-					}}
-				</Formik>
-			</Card>
-			<Grid container>
-				<Grid item>
-					<Link to={LOGIN} component={RouterLink}>
-						back to login
-					</Link>
+					<Typography component="h1" variant="h5" align="center">
+						Sign Up
+					</Typography>
+					<Formik
+						initialValues={{ email: '', password: '' }}
+						onSubmit={_handleSignUp}
+						validationSchema={LoginSchema}
+					>
+						{({
+							values: { email, password },
+							errors,
+							touched,
+							handleChange,
+							handleBlur,
+							handleSubmit,
+						}) => {
+							return (
+								<form onSubmit={handleSubmit}>
+									<TextField
+										variant="outlined"
+										margin="normal"
+										fullWidth
+										label="Email Address"
+										name="email"
+										value={email}
+										onChange={handleChange}
+										onBlur={handleBlur}
+										error={errors.email && touched.email}
+										helperText={(errors.email && touched.email) && errors.email}
+									/>
+									<TextField
+										variant="outlined"
+										margin="normal"
+										fullWidth
+										name="password"
+										label="Password"
+										type="password"
+										value={password}
+										onChange={handleChange}
+										onBlur={handleBlur}
+										error={errors.password && touched.password}
+										helperText={(errors.password && touched.password) && errors.password}
+									/>
+									<Button
+										type="submit"
+										fullWidth
+										variant="contained"
+										color="primary"
+										className={classes.button}
+									>
+										Sign Up
+									</Button>
+								</form>
+							);
+						}}
+					</Formik>
+				</Card>
+				<Grid container>
+					<Grid item>
+						<Link to={LOGIN} component={RouterLink}>
+							back to login
+						</Link>
+					</Grid>
 				</Grid>
-			</Grid>
-		</Container>
+			</Container>
+		)
 	);
 }
+
+SignUpPage.propTypes = propTypes;
 
 export default SignUpPage;

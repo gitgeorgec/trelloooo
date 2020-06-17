@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import routes from '../routes';
 import { makeStyles, CssBaseline } from '@material-ui/core';
 import Img from '../static/img/freeimg_92769330046freejpg850.jpg';
+import NavBar from '../feature/navbar';
 
 const useStyle = makeStyles({
 	layout: {
@@ -58,6 +59,7 @@ function LayoutRoute({
 	return (
 		<div className={classes.layout}>
 			<CssBaseline/>
+			<NavBar/>
 			<Suspense
 				fallback={<div>loading</div>}
 			>

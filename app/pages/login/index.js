@@ -1,7 +1,6 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
-import { FirebaseContext } from '../../firebase';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
@@ -49,8 +48,7 @@ function LoginPage({
 	onNavigate,
 }) {
 	const classes = useStyles();
-	// const { api, auth, } = useContext(FirebaseContext);
-	const loginLoadingStatus = useSelector(state => state.auth.loadingStatus);
+	const loginLoadingStatus = useSelector(state => state.auth.loginLoadingStatus);
 	const prevLoginLoadingStatus = usePrevious(loginLoadingStatus);
 	const dispatch = useDispatch();
 
@@ -58,12 +56,11 @@ function LoginPage({
 		if (prevLoginLoadingStatus === LOADING && loginLoadingStatus === SUCCESS) {
 			onNavigate(HOME);
 		}
-	});
+	}, [loginLoadingStatus]);
 
 	const _handleLogin = (values, { setSubmitting }) => {
 		const { email, password } = values;
 
-		// api.login(email, password);
 		dispatch(loginAction(email, password));
 		setSubmitting(false);
 	};

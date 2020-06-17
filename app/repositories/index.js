@@ -2,7 +2,6 @@ import {
 	createStore as reduxCreateStore,
 	applyMiddleware,
 } from 'redux';
-// import thunk from 'redux-thunk';
 import loggerMiddleWare from 'redux-logger';
 import firebaseMiddleWare from '../firebase/middleware';
 import { composeWithDevTools } from 'redux-devtools-extension';
@@ -20,13 +19,11 @@ export function createStore(initState = {}, options = {}) {
 
 	if (config.mode === 'production' || config.mode === 'pre-production') {
 		middlewares = [
-			// thunk,
 			firebaseMiddleWare,
 		];
 		store = reduxCreateStore(reducer, initState, applyMiddleware(...middlewares));
 	} else {
 		middlewares = [
-			// thunk,
 			firebaseMiddleWare,
 			loggerMiddleWare,
 		];

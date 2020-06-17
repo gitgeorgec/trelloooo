@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {
 	Redirect,
@@ -32,16 +32,8 @@ export function AuthRoute({
 	location,
 	render,
 }) {
-	// const [isAuthed, setIsAuthed] = useState(true);
-	// const [isAuthChecking, setIsAuttChecking] = useState(true);
-
 	const authData = useSelector(state => state.auth);
 	const { isAuthed, loadingStatus } = authData;
-
-	// useEffect(() => {
-	// 	// TODO dispatch auth action
-	// 	setTimeout(() => setIsAuttChecking(false), 100);
-	// }, []);
 
 	if (checkIsOmitPath(location.pathname)) {
 		return render({ isAuthed: false });

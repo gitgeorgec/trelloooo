@@ -9,11 +9,11 @@ const store = createStore();
 
 ReactDOM.render(
 	<StoreProvider store={store}>
-		{/* <FirebaseProvider> */}
+		<FirebaseProvider>
 			<BrowserRouter>
 				<App/>
 			</BrowserRouter>
-		{/* </FirebaseProvider> */}
+		</FirebaseProvider>
 	</StoreProvider>,
 	document.getElementById('root')
 );
