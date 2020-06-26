@@ -16,7 +16,6 @@ function Dashboard({ match }) {
 
 	return (
 		<div>
-			<Link to={HOME}>Back Home</Link>
 			<TrelloDashboard
 				title="Dashboard"
 				dashboardId={dashboardId}

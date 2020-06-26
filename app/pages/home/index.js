@@ -2,7 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { RouteKeyEnums } from '../../routes';
 import { useSelector } from 'react-redux';
-import { makeStyles, Card, Typography, CardActionArea } from '@material-ui/core';
+import {
+	makeStyles,
+	Card,
+	Typography,
+	CardActionArea,
+} from '@material-ui/core';
 
 const { DASHBOARD } = RouteKeyEnums;
 

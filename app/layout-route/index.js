@@ -6,6 +6,7 @@ import routes from '../routes';
 import { makeStyles, CssBaseline } from '@material-ui/core';
 import Img from '../static/img/freeimg_92769330046freejpg850.jpg';
 import NavBar from '../feature/navbar';
+import { useSelector } from 'react-redux';
 
 const useStyle = makeStyles({
 	layout: {
@@ -22,14 +23,14 @@ const propTypes = {
 		pathname: PropTypes.string.isRequired,
 	}).isRequired,
 	history: PropTypes.object,
-	isAuthed: PropTypes.bool.isRequired,
 };
 
 function LayoutRoute({
-	isAuthed,
 	history,
 }) {
 	const classes = useStyle();
+	const authData = useSelector(state => state.auth);
+	const { isAuthed } = authData;
 
 	function onNavigate(uri, options = { passProps: {} }) {
 		history.push({
@@ -59,7 +60,7 @@ function LayoutRoute({
 	return (
 		<div className={classes.layout}>
 			<CssBaseline/>
-			<NavBar/>
+			<NavBar isAuthed={isAuthed}/>
 			<Suspense
 				fallback={<div>loading</div>}
 			>

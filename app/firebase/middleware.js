@@ -28,6 +28,7 @@ const firebaseMiddleware = store => next => action => {
 			firebase.auth
 				.signInWithEmailAndPassword(email, password)
 				.then(data => {
+					console.log(data)
 					dispatch(loginSuccessAction());
 				})
 				.catch(err => {

@@ -13,7 +13,7 @@ const {
 	SIGN_UP,
 	FORGET_PASSWORD,
 } = RouteKeyEnums;
-
+const { NONE, LOADING } = LoadingStatusEnum;
 const omitPaths = [
 	LOGIN,
 	SIGN_UP,
@@ -25,7 +25,6 @@ const propTypes = {
 		pathname: PropTypes.string.isRequired,
 	}).isRequired,
 	render: PropTypes.func.isRequired,
-	checkAuthAction: PropTypes.func.isRequired,
 };
 
 export function AuthRoute({
@@ -33,13 +32,13 @@ export function AuthRoute({
 	render,
 }) {
 	const authData = useSelector(state => state.auth);
-	const { isAuthed, loadingStatus } = authData;
+	const { isAuthed, loginLoadingStatus } = authData;
 
 	if (checkIsOmitPath(location.pathname)) {
 		return render({ isAuthed: false });
 	}
 
-	if (loadingStatus === LoadingStatusEnum.LOADING) {
+	if (loginLoadingStatus === LOADING || loginLoadingStatus === NONE) {
 		return <div>Auth Checking...</div>;
 	}
 
