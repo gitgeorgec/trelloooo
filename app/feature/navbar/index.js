@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -18,9 +19,18 @@ const useStyles = makeStyles(theme => ({
 	title: {
 		flexGrow: 1,
 	},
+	titleLink: {
+		color: 'white',
+		textDecoration: 'none',
+		fontWeight: 'bold',
+	},
 }));
 
-function NavBar({ isAuthed }) {
+const propTypes = {
+	isAuthed: PropTypes.bool,
+};
+
+function NavBar({ isAuthed, }) {
 	const classes = useStyles();
 	const dispatch = useDispatch();
 
@@ -28,32 +38,37 @@ function NavBar({ isAuthed }) {
 		dispatch(logoutAction());
 	}
 
-
 	return (
 		<div className={classes.root}>
 			<AppBar position="static">
 				<Toolbar>
 					<Typography variant="h6" className={classes.title}>
-						<Link to="/">
+						<Link to="/" className={classes.titleLink}>
 							Trellooooo
 						</Link>
 					</Typography>
-					<Button
-						color="inherit"
-						onClick={_handleLogout}
-					>
-						Setting
-					</Button>
-					<Button
-						color="inherit"
-						onClick={_handleLogout}
-					>
-						Logout
-					</Button>
+					{isAuthed && (
+						<Button
+							color="inherit"
+							onClick={_handleLogout}
+						>
+							Setting
+						</Button>
+					)}
+					{isAuthed && (
+						<Button
+							color="inherit"
+							onClick={_handleLogout}
+						>
+							Logout
+						</Button>
+					)}
 				</Toolbar>
 			</AppBar>
 		</div>
 	);
 }
+
+NavBar.propTypes = propTypes;
 
 export default NavBar;

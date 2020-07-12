@@ -29,7 +29,7 @@ if (!app.apps.length) {
 }
 
 export function configFirebase({ dispatch, state }) {
-	// check Auth
+	// Check Auth
 	firebase.auth.onAuthStateChanged(function (user) {
 		if (user) {
 			dispatch(loginSuccessAction());

@@ -28,11 +28,13 @@ const useStyles = makeStyles({
 	},
 	form: {
 		padding: '30px 15px',
-		height: 300,
 	},
 	button: {
 		marginTop: 30,
 	},
+	link: {
+		color: 'white',
+	}
 });
 const { LOADING, SUCCESS } = LoadingStatusEnum;
 const { LOGIN, HOME } = RouteKeyEnums;
@@ -133,7 +135,7 @@ function SignUpPage({
 				</Card>
 				<Grid container>
 					<Grid item>
-						<Link to={LOGIN} component={RouterLink}>
+						<Link to={LOGIN} component={RouterLink} className={classes.link}>
 							back to login
 						</Link>
 					</Grid>

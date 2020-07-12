@@ -32,6 +32,9 @@ const useStyles = makeStyles({
 	button: {
 		marginTop: 30,
 	},
+	link: {
+		color: 'white',
+	},
 });
 const { LOADING, SUCCESS } = LoadingStatusEnum;
 const { SIGN_UP, FORGET_PASSWORD, HOME } = RouteKeyEnums;
@@ -130,13 +133,13 @@ function LoginPage({
 			</Card>
 			<Grid container>
 				<Grid item xs>
-					<Link to={FORGET_PASSWORD} component={RouterLink}>
-						Forgot password?
+					<Link to={FORGET_PASSWORD} component={RouterLink} className={classes.link}>
+						Forgot Password?
 					</Link>
 				</Grid>
 				<Grid item>
-					<Link to={SIGN_UP} component={RouterLink}>
-						Sign Up
+					<Link to={SIGN_UP} component={RouterLink} className={classes.link}>
+						SIGN UP
 					</Link>
 				</Grid>
 			</Grid>

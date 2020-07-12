@@ -21,10 +21,12 @@ const useStyles = makeStyles({
 	},
 	form: {
 		padding: '30px 15px',
-		height: 300,
 	},
 	button: {
-		marginTop: 130,
+		marginTop: 30,
+	},
+	link: {
+		color: 'white',
 	},
 });
 const { LOGIN } = RouteKeyEnums;
@@ -93,7 +95,7 @@ function ForgetPasswordPage() {
 			</Card>
 			<Grid container>
 				<Grid item>
-					<Link to={LOGIN} component={RouterLink}>
+					<Link to={LOGIN} component={RouterLink} className={classes.link}>
 						back to login
 					</Link>
 				</Grid>
