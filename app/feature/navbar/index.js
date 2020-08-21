@@ -30,7 +30,7 @@ const propTypes = {
 	isAuthed: PropTypes.bool,
 };
 
-function NavBar({ isAuthed, }) {
+function NavBar({ isAuthed }) {
 	const classes = useStyles();
 	const dispatch = useDispatch();
 

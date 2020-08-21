@@ -6,6 +6,7 @@ const SignUp = lazy(() => import('./pages/sign-up'));
 const ForgetPassword = lazy(() => import('./pages/forget-password'));
 const Home = lazy(() => import('./pages/home'));
 const Dashboard = lazy(() => import('./pages/dashboard'));
+const Test = lazy(() => import('./pages/test'));
 
 export const RouteKeyEnums = {
 	ROOT: '/',
@@ -15,6 +16,8 @@ export const RouteKeyEnums = {
 	DASHBOARD: '/dashboard',
 
 	HOME: '/home',
+
+	TEST: '/test',
 };
 
 const {
@@ -24,6 +27,7 @@ const {
 	FORGET_PASSWORD,
 	DASHBOARD,
 	HOME,
+	TEST,
 } = RouteKeyEnums;
 
 const routes = [
@@ -51,6 +55,11 @@ const routes = [
 		path: `${DASHBOARD}/:dashboardId`,
 		exact: true,
 		component: Dashboard,
+	},
+	{
+		path: TEST,
+		exact: true,
+		component: Test,
 	},
 	{
 		path: ROOT,

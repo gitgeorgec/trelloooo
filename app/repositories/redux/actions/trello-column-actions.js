@@ -4,10 +4,10 @@ import {
 	UPDATE_TRELLO_COLUMNS_FAILED,
 } from './action-types';
 
-export function updateTrelloColumnsAction(columns = []) {
+export function updateTrelloColumnsAction(dashboardId) {
 	return {
 		type: START_UPDATE_TRELLO_COLUMNS,
-		columns,
+		dashboardId,
 	};
 }
 

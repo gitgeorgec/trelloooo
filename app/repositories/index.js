@@ -4,7 +4,7 @@ import {
 } from 'redux';
 import loggerMiddleWare from 'redux-logger';
 import firebaseMiddleWare from '../firebase/middleware';
-import { configFirebase } from '../firebase';
+import { configFirebaseListener } from '../firebase';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { Provider } from 'react-redux';
 import { reducer } from './redux';
@@ -31,7 +31,7 @@ export function createStore(initState = {}, options = {}) {
 		store = reduxCreateStore(reducer, initState, composeWithDevTools(applyMiddleware(...middlewares)));
 	}
 
-	configFirebase(store);
+	configFirebaseListener(store);
 
 	return store;
 }

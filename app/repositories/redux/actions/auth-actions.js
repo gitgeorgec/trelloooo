@@ -50,11 +50,12 @@ export function logoutFailedAction(error) {
 	};
 }
 
-export function signUpAction(email, password) {
+export function signUpAction(email, password, username) {
 	return {
 		type: START_SIGNUP,
 		email,
 		password,
+		username,
 	};
 }
 

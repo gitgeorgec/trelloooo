@@ -45,12 +45,12 @@ const initState = {
 const trelloColumn = produce((draftState = initState, action) => {
 	switch (action.type) {
 		case START_UPDATE_TRELLO_COLUMNS: {
-		// 	draftState.loadingStatus = LOADING;
+			draftState.loadingStatus = LOADING;
 
-		// 	return draftState;
-		// }
+			return draftState;
+		}
 
-		// case UPDATE_TRELLO_COLUMNS_SUCCESS: {
+		case UPDATE_TRELLO_COLUMNS_SUCCESS: {
 			const { columns } = action;
 
 			columns.forEach(column => {

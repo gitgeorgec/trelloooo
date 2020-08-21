@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import TrelloDashboard from '../../feature/trello-dashboard';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import { RouteKeyEnums } from '../../routes';
-
 const { HOME } = RouteKeyEnums;
 
 const propTypes = {

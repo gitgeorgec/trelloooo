@@ -12,12 +12,14 @@ const {
 	LOGIN,
 	SIGN_UP,
 	FORGET_PASSWORD,
+	TEST,
 } = RouteKeyEnums;
 const { NONE, LOADING } = LoadingStatusEnum;
 const omitPaths = [
 	LOGIN,
 	SIGN_UP,
 	FORGET_PASSWORD,
+	TEST,
 ];
 
 const propTypes = {

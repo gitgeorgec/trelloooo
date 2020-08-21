@@ -34,13 +34,14 @@ const useStyles = makeStyles({
 	},
 	link: {
 		color: 'white',
-	}
+	},
 });
 const { LOADING, SUCCESS } = LoadingStatusEnum;
 const { LOGIN, HOME } = RouteKeyEnums;
 const LoginSchema = Yup.object().shape({
 	email: Yup.string().email('Invalid email').required('Required'),
 	password: Yup.string().required('Required'),
+	username: Yup.string().required('Required'),
 });
 
 const propTypes = {
@@ -63,9 +64,9 @@ function SignUpPage({
 	}, [signUpLoadingStatus]);
 
 	const _handleSignUp = (values, { setSubmitting }) => {
-		const { email, password } = values;
+		const { email, password, username } = values;
 
-		dispatch(signUpAction(email, password));
+		dispatch(signUpAction(email, password, username));
 		setSubmitting(false);
 	};
 
@@ -80,12 +81,12 @@ function SignUpPage({
 						Sign Up
 					</Typography>
 					<Formik
-						initialValues={{ email: '', password: '' }}
+						initialValues={{ email: '', password: '', username: '' }}
 						onSubmit={_handleSignUp}
 						validationSchema={LoginSchema}
 					>
 						{({
-							values: { email, password },
+							values: { email, password, username },
 							errors,
 							touched,
 							handleChange,
@@ -94,6 +95,18 @@ function SignUpPage({
 						}) => {
 							return (
 								<form onSubmit={handleSubmit}>
+									<TextField
+										variant="outlined"
+										margin="normal"
+										fullWidth
+										label="User Name"
+										name="username"
+										value={username}
+										onChange={handleChange}
+										onBlur={handleBlur}
+										error={errors.username && touched.username}
+										helperText={(errors.username && touched.username) && errors.username}
+									/>
 									<TextField
 										variant="outlined"
 										margin="normal"

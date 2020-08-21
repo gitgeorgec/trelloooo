@@ -3,6 +3,7 @@ import auth from './auth';
 import dashboard from './dashboard';
 import trelloColumn from './trello-column';
 import trelloCard from './trello-card';
+import user from './user';
 
 const reducer = combineReducers(
 	{
@@ -10,6 +11,7 @@ const reducer = combineReducers(
 		dashboard,
 		trelloColumn,
 		trelloCard,
+		user,
 	}
 );
 

@@ -41,10 +41,10 @@ const trelloColumn = produce((draftState = initState, action) => {
 		case START_CREATE_TRELLO_CARD: {
 			draftState.createLoadingStatus = LOADING;
 
-		// 	return draftState;
-		// }
+			return draftState;
+		}
 
-		// case CREATE_TRELLO_CARD_SUCCESS: {
+		case CREATE_TRELLO_CARD_SUCCESS: {
 			const { card } = action;
 
 			draftState.data[card.id] = card;
@@ -61,12 +61,12 @@ const trelloColumn = produce((draftState = initState, action) => {
 		}
 
 		case START_UPDATE_TRELLO_CARD: {
-		// 	draftState.updateLoadingStatus = LOADING;
+			draftState.updateLoadingStatus = LOADING;
 
-		// 	return draftState;
-		// }
+			return draftState;
+		}
 
-		// case UPDATE_TRELLO_CARD_SUCCESS: {
+		case UPDATE_TRELLO_CARD_SUCCESS: {
 			const { card } = action;
 
 			draftState.data[card.id] = card;

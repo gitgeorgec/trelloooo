@@ -7,6 +7,27 @@ import {
 	UPDATE_DASHBOARD_FAILED,
 } from './action-types';
 
+export function createDashboardAction(title) {
+	return {
+		type: START_CREATE_DASHBOARD,
+		title,
+	};
+}
+
+export function createDashboardSuccessAction(dashboard) {
+	return {
+		type: CREATE_DASHBOARD_SUCCESS,
+		dashboard,
+	};
+}
+
+export function createDashboardFailedAction(error) {
+	return {
+		type: CREATE_DASHBOARD_FAILED,
+		error,
+	};
+}
+
 export function updateDashboardAction(dashboard = {}) {
 	return {
 		type: START_UPDATE_DASHBOARD,
