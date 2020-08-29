@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropType from 'prop-types';
 import {
 	Card,
@@ -8,7 +8,9 @@ import {
 	Input,
 	makeStyles,
 	Button,
+	IconButton,
 } from '@material-ui/core';
+import HighlightOffRoundedIcon from '@material-ui/icons/HighlightOffRounded';
 
 const useStyle = makeStyles({
 	card: {
@@ -30,27 +32,42 @@ const propTypes = {
 		id: PropType.string,
 		title: PropType.string,
 	}),
-	updateTitle: PropType.func,
+	columnId: PropType.string,
+	onUpdateTitle: PropType.func,
 	onCreateCard: PropType.func,
+	onDeleteColumn: PropType.func,
 };
 const defaultProps = {
-	updateTitle: () => {},
+	onUpdateTitle: () => {},
 	onCreateCard: () => {},
+	onDeleteColumn: () => {},
+	data: {},
 };
 
 function TrelloColumn({
 	children,
 	data,
-	updateTitle,
+	columnId,
+	onUpdateTitle,
 	onCreateCard,
+	onDeleteColumn,
 }) {
 	const classes = useStyle();
-	const [title, setTitle] = useState(data.title);
+	const [title, setTitle] = useState('');
 	const [isTitleEditable, setIsTitleEditable] = useState(false);
+
+	useEffect(() => {
+		if (data && data.title !== title) {
+			setTitle(data.title);
+		}
+	}, [data.title]);
 
 	function _handleUpdateTitle() {
 		setIsTitleEditable(false);
-		updateTitle(title);
+
+		if (title !== data.title) {
+			onUpdateTitle(columnId, title);
+		}
 	}
 
 	return (
@@ -74,16 +91,23 @@ function TrelloColumn({
 									onBlur={_handleUpdateTitle}
 									autoFocus
 								/> :
-								title
+								data.title
 						}
 					</Typography>
 				}
+				action={(
+					<IconButton
+						onClick={() => onDeleteColumn(columnId)}
+					>
+						<HighlightOffRoundedIcon/>
+					</IconButton>
+				)}
 			/>
 			{children}
 			<CardActions>
 				<Button
 					fullWidth
-					onClick={() => onCreateCard(data.id)}
+					onClick={() => onCreateCard(columnId)}
 					color="primary"
 				>
 					Create New Card

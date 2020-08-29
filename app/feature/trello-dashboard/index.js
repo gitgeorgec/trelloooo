@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropType from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import produce from 'immer';
@@ -21,10 +21,19 @@ import {
 } from '../../repositories/redux/actions';
 
 const { updateDashboardAction } = dashboardActions;
-const { updateTrelloColumnsAction } = trelloColumnActions;
+const {
+	createTrelloColumnAction,
+	updateTrelloColumnsAction,
+	deleteTrelloColumnAction,
+	subscribeTrelloColumnsAction,
+	unsubscribeTrelloColumnsAction,
+} = trelloColumnActions;
 const {
 	createTrelloCardAction,
-	updateTrelloCardAction,
+	updateTrelloCardsAction,
+	deleteTrelloCardAction,
+	subscriptTrelloCardsAction,
+	unsubscriptTrelloCardsAction,
 } = trelloCardActions;
 
 const useStyle = makeStyles({
@@ -52,11 +61,6 @@ const useStyle = makeStyles({
 
 const propTypes = {
 	dashboardId: PropType.string,
-	data: PropType.shape({
-		cards: PropType.object,
-		columns: PropType.object,
-		columnIds: PropType.array,
-	}),
 };
 
 function TrelloDashboard({
@@ -66,8 +70,20 @@ function TrelloDashboard({
 	const dashboardData = useSelector(state => state.dashboard).data;
 	const columnData = useSelector(state => state.trelloColumn).data;
 	const cardData = useSelector(state => state.trelloCard).data;
-	const { columnIds, title } = dashboardData[dashboardId];
+	const { columnIds = [], title } = dashboardData[dashboardId] ? dashboardData[dashboardId] : {};
 	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch(subscribeTrelloColumnsAction(dashboardId));
+
+		return () => dispatch(unsubscribeTrelloColumnsAction());
+	}, [dashboardId]);
+
+	useEffect(() => {
+		dispatch(subscriptTrelloCardsAction(dashboardId));
+
+		return () => dispatch(unsubscriptTrelloCardsAction());
+	}, [dashboardId]);
 
 	function _handleDragEnd(result) {
 		const { destination, draggableId, source, type } = result;
@@ -81,7 +97,7 @@ function TrelloDashboard({
 		}
 
 		if (type === 'column') {
-			dispatch(updateDashboardAction(produce(dashboardData[dashboardId], draftState => {
+			dispatch(updateDashboardAction(dashboardId, produce(dashboardData[dashboardId], draftState => {
 				draftState.columnIds[destination.index] = columnIds[source.index];
 				draftState.columnIds[source.index] = columnIds[destination.index];
 			})));
@@ -104,36 +120,55 @@ function TrelloDashboard({
 				});
 			}
 
-			dispatch(updateTrelloColumnsAction([newColumnData[source.droppableId], newColumnData[destination.droppableId]]));
+			dispatch(updateTrelloColumnsAction([
+				{
+					columnId: source.droppableId,
+					column: newColumnData[source.droppableId],
+				}, {
+					columnId: destination.droppableId,
+					column: newColumnData[destination.droppableId],
+				},
+			]));
 		}
 	}
 
 	function _handleCreateCard(columnId) {
-		const id = Math.floor(Math.random() * 1000) + 'id';
-		const newColumnData = produce(columnData, draftState => {
-			draftState[columnId].cardIds.push(id);
-		});
-
-		dispatch(createTrelloCardAction({ id, title: 'title' }));
-		dispatch(updateTrelloColumnsAction([newColumnData[columnId]]));
+		dispatch(createTrelloCardAction('New Card', columnId, dashboardId));
 	}
 
-	function _handleUpdateCard(card) {
-		dispatch(updateTrelloCardAction(card));
+	function _handleUpdateCard(cardId, card) {
+		dispatch(updateTrelloCardsAction(
+			[{
+				cardId,
+				card,
+			}]
+		));
+	}
+
+	function _handleDeleteCard(cardId, columnId) {
+		dispatch(deleteTrelloCardAction(cardId, columnId));
 	}
 
 	function _handleCreateColumn() {
-		const id = Math.floor(Math.random() * 1000) + 'id';
-		const newColumn = { id, title: 'column', cardIds: [] };
-		const newdashboardData = produce(dashboardData, draftState => {
-			draftState[dashboardId].columnIds.push(id);
-		});
-
-		dispatch(updateTrelloColumnsAction([newColumn]));
-		dispatch(updateDashboardAction(newdashboardData[dashboardId]));
+		dispatch(createTrelloColumnAction('New Column', dashboardId));
 	}
 
-	function _renderCards(cardIds) {
+	function _handleUpdateColumnTitle(columnId, title) {
+		dispatch(updateTrelloColumnsAction(
+			[{
+				columnId,
+				column: produce(columnData[columnId], draftState => {
+					draftState.title = title;
+				}),
+			}]
+		));
+	}
+
+	function _handleDeleteColumn(columnId) {
+		dispatch(deleteTrelloColumnAction(columnId));
+	}
+
+	function _renderCards(cardIds, columnId) {
 		return cardIds.map((cardId, index) => (
 			<Draggable
 				draggableId={cardId}
@@ -148,8 +183,10 @@ function TrelloDashboard({
 					>
 						<TrelloCard
 							data={cardData[cardId]}
+							cardId={cardId}
 							index={index}
 							onUpdate={_handleUpdateCard}
+							onDeleteCard={() => _handleDeleteCard(cardId, columnId)}
 						/>
 					</div>
 				)}
@@ -182,9 +219,12 @@ function TrelloDashboard({
 								>
 									<TrelloColumn
 										data={columnData[columnId]}
+										columnId={columnId}
 										onCreateCard={_handleCreateCard}
+										onUpdateTitle={_handleUpdateColumnTitle}
+										onDeleteColumn={_handleDeleteColumn}
 									>
-										{_renderCards(columnData[columnId] ? columnData[columnId].cardIds : [])}
+										{_renderCards(columnData[columnId] ? columnData[columnId].cardIds : [], columnId)}
 										{provided.placeholder}
 									</TrelloColumn>
 								</div>

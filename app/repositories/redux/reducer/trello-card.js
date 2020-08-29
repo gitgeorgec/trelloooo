@@ -7,29 +7,21 @@ const {
 	START_CREATE_TRELLO_CARD,
 	CREATE_TRELLO_CARD_SUCCESS,
 	CREATE_TRELLO_CARD_FAILED,
-	START_UPDATE_TRELLO_CARD,
-	UPDATE_TRELLO_CARD_SUCCESS,
-	UPDATE_TRELLO_CARD_FAILED,
+	START_UPDATE_TRELLO_CARDS,
+	UPDATE_TRELLO_CARDS_SUCCESS,
+	UPDATE_TRELLO_CARDS_FAILED,
+	SET_TRELLO_CARD,
 } = actionTypes;
 
+// Example
+// data: {
+// 	'cardId': {
+// 		columnId: 'columnId',
+// 		title: 'cardTitle',
+// 		content: 'content',
+// 	},
 const initState = {
-	data: {
-		'card-1': {
-			id: 'card-1',
-			title: 'Card-Title1',
-			content: 'some content',
-		},
-		'card-2': {
-			id: 'card-2',
-			title: 'Card-Title2',
-			content: 'some content',
-		},
-		'card-3': {
-			id: 'card-3',
-			title: 'Card-Title3',
-			content: 'some content',
-		},
-	},
+	data: {},
 
 	updateLoadingStatus: NONE,
 	createLoadingStatus: NONE,
@@ -45,9 +37,6 @@ const trelloColumn = produce((draftState = initState, action) => {
 		}
 
 		case CREATE_TRELLO_CARD_SUCCESS: {
-			const { card } = action;
-
-			draftState.data[card.id] = card;
 			draftState.createLoadingStatus = SUCCESS;
 
 			return draftState;
@@ -60,24 +49,33 @@ const trelloColumn = produce((draftState = initState, action) => {
 			return draftState;
 		}
 
-		case START_UPDATE_TRELLO_CARD: {
+		case START_UPDATE_TRELLO_CARDS: {
 			draftState.updateLoadingStatus = LOADING;
 
 			return draftState;
 		}
 
-		case UPDATE_TRELLO_CARD_SUCCESS: {
-			const { card } = action;
-
-			draftState.data[card.id] = card;
+		case UPDATE_TRELLO_CARDS_SUCCESS: {
 			draftState.updateLoadingStatus = SUCCESS;
 
 			return draftState;
 		}
 
-		case UPDATE_TRELLO_CARD_FAILED: {
+		case UPDATE_TRELLO_CARDS_FAILED: {
 			draftState.updateLoadingStatus = FAILED;
 			draftState.error = action.error;
+
+			return draftState;
+		}
+
+		case SET_TRELLO_CARD: {
+			const { cardId, card } = action;
+
+			if (card) {
+				draftState.data[cardId] = card;
+			} else {
+				delete draftState.data[cardId];
+			}
 
 			return draftState;
 		}

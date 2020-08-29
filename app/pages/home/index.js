@@ -1,22 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { RouteKeyEnums } from '../../routes';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
 	makeStyles,
 	Card,
 	Typography,
 	CardActionArea,
+	IconButton,
 } from '@material-ui/core';
+import HighlightOffRoundedIcon from '@material-ui/icons/HighlightOffRounded';
+import CreateDashboardModal from './create-dashboard-modal';
+import { dashboardActions } from '../../repositories/redux/actions';
 
 const { DASHBOARD } = RouteKeyEnums;
+const {
+	createDashboardAction,
+	deleteDahsboardAction,
+} = dashboardActions;
 
 const useStyle = makeStyles({
 	home: {
 		display: 'flex',
 		justifyContent: 'center',
-		alignItems: 'center',
-		minHeight: '100vh',
+		minHeight: 'calc(100vh - 64px)',
 	},
 	title: {
 		color: '#fff',
@@ -26,17 +33,24 @@ const useStyle = makeStyles({
 	},
 	dashboards: {
 		display: 'grid',
-		gridTemplateColumns: '1fr 1fr 1fr',
+		gridTemplateColumns: '1fr 1fr 1fr 1fr',
 	},
 	card: {
-		width: 300,
-		height: 200,
+		width: 240,
+		height: 160,
 		margin: 10,
 		backgroundImage: 'radial-gradient(circle, #2e2ee3, #0063f7, #0087fa, #00a5f1, #61bfe6)',
-		transition: '0.5s',
+		transition: '0.2s',
 		'&:hover': {
 			transform: 'scale(1.05)',
 		},
+		position: 'relative',
+	},
+	deleteBtn: {
+		position: 'absolute',
+		top: 0,
+		right: 0,
+		color: '#fff',
 	},
 	action: {
 		display: 'flex',
@@ -45,6 +59,7 @@ const useStyle = makeStyles({
 		color: '#fff',
 		height: '100%',
 		cursor: 'pointer',
+		textAlign: 'center',
 	},
 	link: {
 		color: 'white',
@@ -53,8 +68,19 @@ const useStyle = makeStyles({
 });
 
 function Home() {
+	const [isCreateDashboardModalVisible, setIsCreateDashboardModalVisible] = useState(false);
 	const classes = useStyle();
 	const dashboardData = useSelector(state => state.dashboard.data);
+	const dispatch = useDispatch();
+
+	function _handleCreateDashborad({ name }) {
+		dispatch(createDashboardAction(name));
+		setIsCreateDashboardModalVisible(false);
+	}
+
+	function _handleDeleteDashboard(dashboard) {
+		dispatch(deleteDahsboardAction(dashboard));
+	}
 
 	function _renderDashBoards() {
 		const dashboardIds = Object.keys(dashboardData);
@@ -68,6 +94,15 @@ function Home() {
 						</Typography>
 					</CardActionArea>
 				</Link>
+				<IconButton
+					className={classes.deleteBtn}
+					onClick={e => {
+						e.stopPropagation();
+						_handleDeleteDashboard(id);
+					}}
+				>
+					<HighlightOffRoundedIcon/>
+				</IconButton>
 			</Card>
 		));
 	}
@@ -84,7 +119,10 @@ function Home() {
 				</Typography>
 				<div className={classes.dashboards}>
 					{_renderDashBoards()}
-					<Card className={classes.card}>
+					<Card
+						className={classes.card}
+						onClick={() => setIsCreateDashboardModalVisible(true)}
+					>
 						<CardActionArea className={classes.action}>
 							<Typography variant="h5" component="h2">
 								+ CREATE DASHBOARD
@@ -93,6 +131,11 @@ function Home() {
 					</Card>
 				</div>
 			</div>
+			<CreateDashboardModal
+				isVisible={isCreateDashboardModalVisible}
+				onClose={() => setIsCreateDashboardModalVisible(false)}
+				onCreate={_handleCreateDashborad}
+			/>
 		</div>
 	);
 }

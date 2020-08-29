@@ -4,7 +4,11 @@ import app from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/database';
 import 'firebase/auth';
-import { authActions, userActions } from '../repositories/redux/actions';
+import {
+	authActions,
+	userActions,
+	dashboardActions,
+} from '../repositories/redux/actions';
 
 const {
 	logoutSuccessAction,
@@ -13,6 +17,9 @@ const {
 const {
 	setUserAction,
 } = userActions;
+const {
+	subscribeDashboardAction,
+} = dashboardActions;
 
 const FirebaseContext = createContext(null);
 
@@ -32,34 +39,28 @@ if (!app.apps.length) {
 	};
 }
 
-export function configFirebaseListener({ dispatch }) {
+export function configFirebaseListener({ dispatch, getState }) {
 	const database = firebase.database;
 	const UsersRef = database.collection('users');
-	const DashboardRef = database.collection('dashboard');
-
-	let unsubscribleDashboard = () => {};
 
 	// Check Auth
+	// Subscrible Auth changes
 	firebase.auth.onAuthStateChanged(function (user) {
 		if (user) {
-			// Subscrible changes
-			UsersRef
-				.doc(user.uid).get().then(doc => {
+			const userId = user.uid;
+
+			UsersRef.doc(userId)
+				.get()
+				.then(doc => {
 					const userData = doc.data();
 
 					dispatch(setUserAction(userData));
-				});
-
-			unsubscribleDashboard = DashboardRef.where(`users.${user.uid}`, '==', true).onSnapshot(function (dashboards) {
-				dashboards.docs.forEach(doc => console.log(doc.data()));
-			});
-
-			// Check Column
+					dispatch(subscribeDashboardAction(userId));
+				})
+				.catch(err => console.error(err));
 
 			dispatch(loginSuccessAction());
 		} else {
-			unsubscribleDashboard();
-
 			dispatch(logoutSuccessAction());
 		}
 	});

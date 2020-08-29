@@ -1,5 +1,6 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const extractRoot = new MiniCssExtractPlugin({
 	filename: 'css/admin.css',
 });
@@ -61,5 +62,6 @@ module.exports = {
 			chunks: ['app'],
 			template: 'views/index.html',
 		}),
+		// new BundleAnalyzerPlugin(),
 	],
 };

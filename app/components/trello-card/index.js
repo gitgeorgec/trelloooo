@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropType from 'prop-types';
 import {
 	Card,
 	CardHeader,
 	Typography,
 	makeStyles,
-	Button,
+	IconButton,
 	Input,
 } from '@material-ui/core';
+import HighlightOffRoundedIcon from '@material-ui/icons/HighlightOffRounded';
 import produce from 'immer';
 
 const useStyle = makeStyles({
@@ -29,6 +30,7 @@ const propTypes = {
 		id: PropType.string,
 		title: PropType.string,
 	}),
+	cardId: PropType.string,
 	onClick: PropType.func,
 	onUpdate: PropType.func,
 };
@@ -38,13 +40,21 @@ const defaultProps = {
 };
 
 function TrelloCard({
-	data,
+	data = {},
 	onClick,
 	onUpdate,
+	onDeleteCard,
+	cardId,
 }) {
 	const classes = useStyle();
 	const [title, setTitle] = useState(data.title);
 	const [isTitleEditable, setIsTitleEditable] = useState(false);
+
+	useEffect(() => {
+		if (data && data.title !== title) {
+			setTitle(data.title);
+		}
+	}, [data.title]);
 
 	function _handleUpdateTitle() {
 		const udpateData = produce(data, draftState => {
@@ -52,12 +62,10 @@ function TrelloCard({
 		});
 
 		setIsTitleEditable(false);
-		onUpdate(udpateData);
-	}
 
-	function _handleClickEdit(e) {
-		e.stopPropagation();
-		setIsTitleEditable(true);
+		if (title !== data.title) {
+			onUpdate(cardId, udpateData);
+		}
 	}
 
 	return (
@@ -69,7 +77,11 @@ function TrelloCard({
 		>
 			<CardHeader
 				title={
-					<Typography component="h6" variant="h6">
+					<Typography
+						component="h6"
+						variant="h6"
+						onClick={() => setIsTitleEditable(true)}
+					>
 						{
 							isTitleEditable ?
 								<Input
@@ -83,13 +95,11 @@ function TrelloCard({
 					</Typography>
 				}
 				action={
-					<Button
-						color="primary"
-						className={classes.button}
-						onClick={_handleClickEdit}
+					<IconButton
+						onClick={onDeleteCard}
 					>
-						Edit
-					</Button>
+						<HighlightOffRoundedIcon/>
+					</IconButton>
 				}
 			/>
 		</Card>

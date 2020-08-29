@@ -50,7 +50,7 @@ function NavBar({ isAuthed }) {
 					{isAuthed && (
 						<Button
 							color="inherit"
-							onClick={_handleLogout}
+							// onClick={_handleLogout}
 						>
 							Setting
 						</Button>
