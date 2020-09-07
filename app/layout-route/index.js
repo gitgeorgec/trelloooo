@@ -60,7 +60,7 @@ function LayoutRoute({
 	return (
 		<div className={classes.layout}>
 			<CssBaseline/>
-			<NavBar isAuthed={isAuthed}/>
+			<NavBar isAuthed={isAuthed} onNavigate={onNavigate}/>
 			<Suspense
 				fallback={<div>loading</div>}
 			>

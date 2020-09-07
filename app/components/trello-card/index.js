@@ -9,6 +9,7 @@ import {
 	Input,
 } from '@material-ui/core';
 import HighlightOffRoundedIcon from '@material-ui/icons/HighlightOffRounded';
+import CardModal from '../card-modal';
 import produce from 'immer';
 
 const useStyle = makeStyles({
@@ -17,6 +18,9 @@ const useStyle = makeStyles({
 		minHeight: 60,
 		padding: 5,
 		position: 'relative',
+	},
+	cardTitle: {
+		cursor: 'text',
 	},
 	button: {
 		position: 'absolute',
@@ -29,32 +33,34 @@ const propTypes = {
 	data: PropType.shape({
 		id: PropType.string,
 		title: PropType.string,
+		content: PropType.string,
 	}),
 	cardId: PropType.string,
-	onClick: PropType.func,
 	onUpdate: PropType.func,
+	onDeleteCard: PropType.func,
 };
 const defaultProps = {
-	onClick: () => {},
 	onUpdate: () => {},
+	onDeleteCard: () => {},
 };
 
 function TrelloCard({
 	data = {},
-	onClick,
 	onUpdate,
 	onDeleteCard,
 	cardId,
 }) {
+	const { title: cardTitle, content: cardContent } = data;
 	const classes = useStyle();
-	const [title, setTitle] = useState(data.title);
+	const [title, setTitle] = useState(cardTitle);
 	const [isTitleEditable, setIsTitleEditable] = useState(false);
+	const [isContentModalVisible, setIsContentModalVisible] = useState(false);
 
 	useEffect(() => {
-		if (data && data.title !== title) {
-			setTitle(data.title);
+		if (data && cardTitle !== title) {
+			setTitle(cardTitle);
 		}
-	}, [data.title]);
+	}, [cardTitle]);
 
 	function _handleUpdateTitle() {
 		const udpateData = produce(data, draftState => {
@@ -63,46 +69,69 @@ function TrelloCard({
 
 		setIsTitleEditable(false);
 
-		if (title !== data.title) {
+		if (title !== cardTitle) {
 			onUpdate(cardId, udpateData);
 		}
 	}
 
+	function _handleUpdateContent(content) {
+		const updateData = produce(data, draftState => {
+			draftState.content = content;
+		});
+
+		if (cardContent !== content) {
+			onUpdate(cardId, updateData);
+		}
+	}
+
 	return (
-		<Card
-			title={title}
-			onClick={() => onClick(data)}
-			variant="outlined"
-			className={classes.card}
-		>
-			<CardHeader
-				title={
-					<Typography
-						component="h6"
-						variant="h6"
-						onClick={() => setIsTitleEditable(true)}
-					>
-						{
-							isTitleEditable ?
-								<Input
-									value={title}
-									onChange={e => setTitle(e.target.value)}
-									onBlur={_handleUpdateTitle}
-									autoFocus
-								/> :
-								title
-						}
-					</Typography>
-				}
-				action={
-					<IconButton
-						onClick={onDeleteCard}
-					>
-						<HighlightOffRoundedIcon/>
-					</IconButton>
-				}
+		<>
+			<Card
+				title={title}
+				onClick={() => setIsContentModalVisible(true)}
+				variant="outlined"
+				className={classes.card}
+			>
+				<CardHeader
+					title={
+						<Typography
+							component="h6"
+							variant="h6"
+							className={classes.cardTitle}
+							onClick={e => {
+								e.stopPropagation();
+								setIsTitleEditable(true);
+							}}
+						>
+							{
+								isTitleEditable ?
+									<Input
+										value={title}
+										onChange={e => setTitle(e.target.value)}
+										onBlur={_handleUpdateTitle}
+										autoFocus
+									/> :
+									title
+							}
+						</Typography>
+					}
+					action={
+						<IconButton
+							onClick={onDeleteCard}
+						>
+							<HighlightOffRoundedIcon/>
+						</IconButton>
+					}
+				/>
+			</Card>
+			<CardModal
+				isVisible={isContentModalVisible}
+				title={cardTitle}
+				content={cardContent}
+				onClose={() => setIsContentModalVisible(false)}
+				onUpdateContent={_handleUpdateContent}
 			/>
-		</Card>
+		</>
 	);
 }
 

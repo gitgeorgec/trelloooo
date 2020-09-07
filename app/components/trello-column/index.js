@@ -13,7 +13,7 @@ import {
 import HighlightOffRoundedIcon from '@material-ui/icons/HighlightOffRounded';
 
 const useStyle = makeStyles({
-	card: {
+	column: {
 		width: 272,
 		minHeight: 78,
 		height: '100%',
@@ -73,7 +73,7 @@ function TrelloColumn({
 	return (
 		<Card
 			variant="outlined"
-			className={classes.card}
+			className={classes.column}
 		>
 			<CardHeader
 				className={classes.header}

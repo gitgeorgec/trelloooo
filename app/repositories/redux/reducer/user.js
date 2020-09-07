@@ -6,11 +6,9 @@ const {
 } = actionTypes;
 
 const initState = {
-	user: {
-		username: '',
-		email: '',
-		dashboardIds: [],
-	},
+	username: '',
+	email: '',
+	dashboardIds: [],
 };
 
 const User = produce((draftState = initState, action) => {

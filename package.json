@@ -4,6 +4,8 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
+		"build:prod": "NODE_ENV=production node ./node_modules/webpack/bin/webpack.js --config webpack.production.config.js",
+		"build:preprod": "NODE_ENV=production node ./node_modules/webpack/bin/webpack.js --config webpack.pre-production.config.js",
 		"server:webpack": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config webpack.development.config.js --hot",
 		"dev": "npm run server:webpack"
 	},
@@ -20,6 +22,7 @@
 		"react": "^16.13.1",
 		"react-beautiful-dnd": "^13.0.0",
 		"react-dom": "^16.13.1",
+		"react-markdown": "^4.3.1",
 		"react-redux": "^7.2.0",
 		"react-router": "^5.2.0",
 		"react-router-config": "^5.1.1",
@@ -51,6 +54,7 @@
 		"redux-logger": "^3.0.6",
 		"style-loader": "^0.23.1",
 		"stylus-loader": "^3.0.2",
+		"terser-webpack-plugin": "^4.1.0",
 		"webpack": "^4.43.0",
 		"webpack-bundle-analyzer": "^3.8.0",
 		"webpack-cli": "^3.3.11",

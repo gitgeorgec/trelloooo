@@ -39,15 +39,19 @@ const {
 const useStyle = makeStyles({
 	dashboard: {
 		padding: 10,
+		height: 'calc(100vh - 64px)',
 	},
 	title: {
 		color: '#fff',
 	},
+	columnDragable: {
+		height: '100%',
+	},
 	content: {
 		width: '100%',
-		minHeight: '100%',
 		display: 'flex',
 		overflowY: 'scroll',
+		maxHeight: 'calc(100% - 56px)',
 	},
 	button: {
 		width: 272,
@@ -206,6 +210,7 @@ function TrelloDashboard({
 						{...provided.draggableProps}
 						{...provided.dragHandleProps}
 						ref={provided.innerRef}
+						className={classes.columnDragable}
 					>
 						<Droppable
 							droppableId={columnId}
@@ -264,6 +269,7 @@ function TrelloDashboard({
 							<Button
 								onClick={_handleCreateColumn}
 								className={classes.button}
+								variant="contained"
 							>
 								CREATE NEW COLUMN
 							</Button>

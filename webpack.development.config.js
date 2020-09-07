@@ -1,10 +1,10 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const extractRoot = new MiniCssExtractPlugin({
 	filename: 'css/admin.css',
 });
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = {
 	mode: 'development',
@@ -62,6 +62,10 @@ module.exports = {
 			chunks: ['app'],
 			template: 'views/index.html',
 		}),
-		// new BundleAnalyzerPlugin(),
+		new webpack.DefinePlugin({
+			'process.env': {
+				NODE_ENV: JSON.stringify('production'),
+			},
+		}),
 	],
 };

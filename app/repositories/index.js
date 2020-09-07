@@ -9,16 +9,15 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import { Provider } from 'react-redux';
 import { reducer } from './redux';
 
-// TODO get config file;
-const config = {
-	mode: 'dev',
-};
+if (!process.env) {
+	process.env = {};
+}
 
 export function createStore(initState = {}, options = {}) {
 	let middlewares;
 	let store;
 
-	if (config.mode === 'production' || config.mode === 'pre-production') {
+	if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'pre-production') {
 		middlewares = [
 			...firebaseMiddleWares,
 		];
