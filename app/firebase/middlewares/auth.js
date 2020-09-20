@@ -34,8 +34,10 @@ const firebaseAuthMiddleware = store => next => action => {
 
 		case START_LOGOUT: {
 			dispatch(unsubscribeDashboardAction());
-			auth.signOut();
 
+			setTimeout(() => {
+				auth.signOut();
+			}, 200);
 			break;
 		}
 

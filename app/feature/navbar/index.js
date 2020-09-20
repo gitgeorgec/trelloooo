@@ -69,8 +69,11 @@ function NavBar({
 					{isAuthed && (
 						<>
 							<Avatar>{userData.username}</Avatar>
-							<IconButton className={classes.menuButton}>
-								<MenuIcon onClick={_handleOpenMenu}/>
+							<IconButton
+								className={classes.menuButton}
+								onClick={_handleOpenMenu}
+							>
+								<MenuIcon/>
 							</IconButton>
 							<Menu
 								anchorEl={anchorEl}

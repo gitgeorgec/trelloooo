@@ -55,6 +55,7 @@ const firebaseDashboradMiddleware = store => next => action => {
 
 		case UNSUBSCRIBE_DASHBOARD: {
 			unsubscribeDashboard();
+
 			break;
 		}
 

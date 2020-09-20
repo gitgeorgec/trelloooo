@@ -17,6 +17,7 @@ const {
 	DELETE_DASHBOARD_SUCCESS,
 	DELETE_DASHBOARD_FAILED,
 	SET_DASHBOARD,
+	LOGOUT_SUCCESS,
 } = actionTypes;
 
 // Example
@@ -123,6 +124,12 @@ const dashboardReducer = produce((draftState = initState, action) => {
 			} else {
 				delete draftState.data[dashboardId];
 			}
+
+			return draftState;
+		}
+
+		case LOGOUT_SUCCESS: {
+			draftState.data = {};
 
 			return draftState;
 		}
